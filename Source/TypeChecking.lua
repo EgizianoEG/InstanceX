@@ -3,6 +3,44 @@
 local TypeChecking = {}
 -------------------------------
 
+type AncestorsFilter = {
+	Properties: {[string]: any};
+	NameMatching: (string | {
+		Pattern: string,
+		Init: number
+	});
+	IsA: string?;
+	IsAncestorOf: Instance;
+	IsDescendantOf: Instance;
+}
+
+type ChildrenFilter = {
+	Properties: {[string]: any};
+	NameMatching: (string | {
+		Pattern: string,
+		Init: number
+	});
+	IsA: string?;
+	IsAncestorOf: Instance;
+}
+
+type DescendantsFilter = {
+	Properties: {[string]: any};
+	NameMatching: (string | {
+		Pattern: string,
+		Init: number
+	});
+	IsA: string?;
+	IsAncestorOf: Instance;
+	IsDescendantOf: Instance;
+}
+
+type ClearAllFilter = {
+	Instances: {Instance | string};
+	Properties: {[string]: any}?;
+	IsA: string?;
+}
+
 export type InstanceXPascal = {
 	--| MainModule:
 	GetInstanceFromPath: (Ancestor: (Instance | string)?, Path: string, PathSeparator: string?, FunctionTimeout: number?, WaitForCreation: boolean?, InstanceWaitTimeout: number?) -> (Instance?, string?),
@@ -15,11 +53,11 @@ export type InstanceXPascal = {
 	GetSiblingsWhichAre: (Object: Instance, ClassName: string) -> {Instance},
 	GetSiblingsOfClass: (Object: Instance, ClassName: string) -> {Instance},
 	ParentAllChildren: (Ancestor: Instance, NewParent: Instance) -> (),
-	GetChildrenMatchingFilter: (Ancestor: Instance, Filter: {[string]: any}) -> {Instance},
-	GetDescendantsMatchingFilter: (Ancestor: Instance, Filter: {[string]: any}) -> {Instance},
+	GetChildrenMatchingFilter: (Ancestor: Instance, Filter: ChildrenFilter) -> {Instance},
+	GetDescendantsMatchingFilter: (Ancestor: Instance, Filter: DescendantsFilter) -> {Instance},
 	GetDuplicateChildren: (Ancestor: Instance) -> {Instance},
 	GetAncestors: (Object: Instance, OrderReversed: boolean?) -> {Instance},
-	GetAncestorsMatchingFilter: (Object: Instance, Filter: {[string]: any}, OrderReversed: boolean?) -> {Instance},
+	GetAncestorsMatchingFilter: (Object: Instance, Filter: AncestorsFilter, OrderReversed: boolean?) -> {Instance},
 	InstanceHasProperty:(Object: Instance, Property: string) -> boolean,
 
 	--| WaitFor:
@@ -37,8 +75,8 @@ export type InstanceXPascal = {
 	--| ClearAll:
 	ClearAllChildrenWhichAre: (Ancestore: Instance, ClassName: string) -> number,
 	ClearAllDescendantsWhichAre: (Ancestore: Instance, ClassName: string) -> number,
-	ClearAllChildrenExcept: (Ancestor: Instance, Excluded: {[string]: any}) -> number,
-	ClearAllDescendantsExcept: (Ancestor: Instance, Excluded: {[string]: any}) -> number,
+	ClearAllChildrenExcept: (Ancestor: Instance, Excluded: ClearAllFilter) -> number,
+	ClearAllDescendantsExcept: (Ancestor: Instance, Excluded: ClearAllFilter) -> number,
 
 	--| Attributes:
 	SetAttributes: (Object: Instance, Attributes: {[string]: any}) -> (),
@@ -73,11 +111,11 @@ export type InstanceXLowered = {
 	getsiblingswhichare: (Object: Instance, ClassName: string) -> {Instance},
 	getsiblingsofclass: (Object: Instance, ClassName: string) -> {Instance},
 	parentallchildren: (Ancestor: Instance, NewParent: Instance) -> (),
-	getchildrenmatchingfilter: (Ancestor: Instance, Filter: {[string]: any}) -> {Instance},
-	getdescendantsmatchingfilter: (Ancestor: Instance, Filter: {[string]: any}) -> {Instance},
+	getchildrenmatchingfilter: (Ancestor: Instance, Filter: ChildrenFilter) -> {Instance},
+	getdescendantsmatchingfilter: (Ancestor: Instance, Filter: DescendantsFilter) -> {Instance},
 	getduplicatechildren: (Ancestor: Instance) -> {Instance},
 	getancestors: (Object: Instance, OrderReversed: boolean?) -> {Instance},
-	getancestorsmatchingfilter: (Object: Instance, Filter: {[string]: any}, OrderReversed: boolean?) -> {Instance},
+	getancestorsmatchingfilter: (Object: Instance, Filter: AncestorsFilter, OrderReversed: boolean?) -> {Instance},
 	instancehasproperty:(Object: Instance, Property: string) -> boolean,
 
 	--| WaitFor:
@@ -95,8 +133,8 @@ export type InstanceXLowered = {
 	--| ClearAll:
 	clearallchildrenwhichare: (Ancestore: Instance, ClassName: string) -> number,
 	clearalldescendantswhichare: (Ancestore: Instance, ClassName: string) -> number,
-	clearallchildrenexcept: (Ancestor: Instance, Excluded: {[string]: any}) -> number,
-	clearalldescendantsexcept: (Ancestor: Instance, Excluded: {[string]: any}) -> number,
+	clearallchildrenexcept: (Ancestor: Instance, Excluded: ClearAllFilter) -> number,
+	clearalldescendantsexcept: (Ancestor: Instance, Excluded: ClearAllFilter) -> number,
 
 	--| Attributes:
 	setattributes: (Object: Instance, Attributes: {[string]: any}) -> (),
