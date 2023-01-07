@@ -5,7 +5,8 @@
             <img src="https://img.shields.io/badge/Roblox-Model-00A0FF?logo=Roblox&logoColor=00A0FF" alt="Roblox Model"/></a>
         <a href="https://opensource.org/licenses/MIT" target="_blank" title="License">
             <img src="https://img.shields.io/badge/License-MIT-%23ffbb45" alt="License"/></a>
-        <img src="https://img.shields.io/badge/Version-1.0.3-red" alt="Version"/>
+        <a href="https://github.com/EgizianoEG/InstanceX/releases/tag/1.0" target="_blank" title="Version">
+            <img src="https://img.shields.io/badge/Version-1.0-red" alt="Version"/></a>
         <br>
         <p>
             A library that provides extended functionality for working with Instances within Roblox.
