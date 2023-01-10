@@ -498,6 +498,11 @@ end
 --[[
 local WrapperCache = setmetatable({}, {__mode = "k"})
 
+---| new - Creates a new instance and wraps it in a metatable that allows access to the library functions as they were instance methods while also keeping the instance's original properties and methods.
+-- @param	ClassName: The class name of the instance to create.
+-- @param	Parent: The parent of the instance.
+-- @param	Properties: A table of properties to set on the instance.
+-- @return	Userdata/The wrapped instance.
 function InstanceX.new(ClassName: string, Parent: Instance?, Properties: {[string]: any}?)
 	local Object = Instance.new(ClassName)
 
@@ -513,6 +518,9 @@ function InstanceX.new(ClassName: string, Parent: Instance?, Properties: {[strin
 	return InstanceX.Wrap(Object)
 end
 
+---| Wrap - Wraps an object in a proxy object. (You can use this function to wrap an existing instance, too)
+-- @param	Object The object to wrap.
+-- @return	The wrapped object?.
 function InstanceX.Wrap(Object: any)
 	for Wrapped, RealObject in next, WrapperCache do
 		if RealObject == Object then
@@ -562,6 +570,9 @@ function InstanceX.Wrap(Object: any)
     end
 end
 
+---| UnWrap - Unwraps an object that was wrapped by InstanceX.Wrap.
+-- @param	Wrapped The wrapped object to be unwrapped.
+-- @treturn	The unwrapped object.
 function InstanceX.UnWrap(Wrapped)
     if type(Wrapped) == "table" then
 		local RObject = {}
