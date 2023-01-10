@@ -492,23 +492,92 @@ function InstanceX.InstanceHasProperty(Object: Instance, Property: string): bool
 	return (HasIt and typeof(Response) ~= "RBXScriptSignal" and typeof(Response) ~= "function")
 end
 
+------------------------------------------------------------------------------------------------------------------------------------|
+
+--| Experimental - Custom Instance Methods (Won't work propaply because of the Instance assertions that are in most of the functions)
 --[[
-function InstanceX.New(ClassName: string, Parent: Instance?, Properties: {[string]: any})
-	assert(type(ClassName) == "string", "[New]: Invalid Argument [1]; ClassName string is expected.")
-	-------------------------------------------------------------------------------------------------
-	
+local WrapperCache = setmetatable({}, {__mode = "k"})
+
+function InstanceX.new(ClassName: string, Parent: Instance?, Properties: {[string]: any}?)
 	local Object = Instance.new(ClassName)
+
 	if Properties then
 		for Property, Value in pairs(Properties) do
 			pcall(function()
-			Object[Property] = Value
+				Object[Property] = Value
 			end)
 		end
 	end
-	Object.Parent = Parent
-	return Object
+
+    Object.Parent = Parent
+	return InstanceX.Wrap(Object)
 end
-]]
+
+function InstanceX.Wrap(Object: any)
+	for Wrapped, RealObject in next, WrapperCache do
+		if RealObject == Object then
+			return Wrapped
+		end
+	end
+
+	if type(Object) == "userdata" then
+        local Fake = newproxy(true)
+        local Meta = getmetatable(Fake)
+
+        Meta.__index = function(_, key)
+            if InstanceX[key] then
+                return InstanceX[key]
+            end
+            return InstanceX.Wrap(Object[key])
+        end
+
+        Meta.__newindex = function(_, key, value)
+            Object[key] = value
+        end
+
+        Meta.__tostring = function()
+            return tostring(Object)
+        end
+
+        WrapperCache[Fake] = Object
+        return Fake
+
+    elseif type(Object) == "function" then
+        local Fake = function(...)
+			local Args = InstanceX.UnWrap({...}::any)
+            local Results = InstanceX.Wrap({Object(table.unpack(Args))})
+            return unpack(Results)
+        end
+		WrapperCache[Fake::any] = Object
+        return Fake::any
+
+    elseif type(Object) == "table" then
+        local Fake = {}
+        for key, value in next,Object do
+            Fake[key] = InstanceX.Wrap(value)
+        end
+		return Fake::any
+    else
+         return Object
+    end
+end
+
+function InstanceX.UnWrap(Wrapped)
+    if type(Wrapped) == "table" then
+		local RObject = {}
+		for key, value in pairs(Wrapped) do
+			RObject[key] = InstanceX.UnWrap(value)
+		end
+		return RObject
+	else
+        local Object = WrapperCache[Wrapped]
+        if not Object then
+            return Wrapped
+        end
+        return Object
+    end
+end
+--]]
 
 -----------------------------------------------------------------------------|
 --| Extended:
