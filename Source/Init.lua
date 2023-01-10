@@ -501,7 +501,7 @@ function InstanceX.New(ClassName: string, Parent: Instance?, Properties: {[strin
 	if Properties then
 		for Property, Value in pairs(Properties) do
 			pcall(function()
-				Object[Property] = Value
+			Object[Property] = Value
 			end)
 		end
 	end
