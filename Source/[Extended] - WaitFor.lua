@@ -200,6 +200,9 @@ function Wait.WaitForHierarchy(Ancestor: Instance, HierarchyTable: {[string|numb
 	return InstanceTree, TimedOut
 end
 
+--[[ WaitForTweens - Waits for the given tweens to complete or be cancelled in the caller thread.
+-| @param   ...: The tween tuple to wait for.
+-| @return  Void - This function does not return anything.]]
 function Wait.WaitForTweens(...: Tween)
 	local Tweens = {...} :: {Tween}
 	for _, Tween in ipairs(Tweens) do
