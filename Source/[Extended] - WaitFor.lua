@@ -200,5 +200,14 @@ function Wait.WaitForHierarchy(Ancestor: Instance, HierarchyTable: {[string|numb
 	return InstanceTree, TimedOut
 end
 
+function Wait.WaitForTweens(...: Tween)
+	local Tweens = {...} :: {Tween}
+	for _, Tween in ipairs(Tweens) do
+		if Tween.PlaybackState ~= Enum.PlaybackState.Completed and Tween.PlaybackState ~= Enum.PlaybackState.Cancelled then
+			Tween.Completed:Wait()
+		end
+	end
+end
+
 -----------
 return Wait
