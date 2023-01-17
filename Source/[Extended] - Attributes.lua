@@ -10,12 +10,12 @@
 local Attributes = {}
 ---------------------
 
-local warn = function(...) 
-	warn("Attributes -", ...) 
+local warn = function(...)
+	warn("Attributes -", ...)
 end
 
 local SupportedTypes = {
-	"nil", "boolean", "number", "string", "Vector2", "Vector3", 
+	"nil", "boolean", "number", "string", "Vector2", "Vector3",
 	"UDim", "UDim2", "Rect", "NumberSequence", "Color3", "BrickColor",
 	"NumberRange", "ColorSequence", "CFrame", "Font"
 }
@@ -100,6 +100,76 @@ function Attributes.IncrementAttribute(Object: Instance, Attribute: string, Incr
 		warn("[IncrementAttribute] Couldn't find the given attribute.")
 	end
 	return nil
+end
+
+--[[ TweenAttribute - Tween an attribute of an object to a goal value using TweenService.
+-| @param	Object: The instance that the attribute is on.
+-| @param	Attribute: The attribute name to be tweened.
+-| @param	GoalValue: The value to tween the attribute to.
+-| @param	TweenInformation (Optional): The TweenInfo to use to animate the attribute.
+-| @return	Tween|nil - The Tween that is used to animate the attribute or nil if the object attribute is not tweenable.]]
+function Attributes.AttributeTween(Object: Instance, Attribute: string, GoalValue: any, TweenInformation: TweenInfo?)
+	assert(typeof(Object) == "Instance", "Invalid Argument [1]; Instance expected for the object argument.")
+	assert(typeof(Attribute) == "string", "Invalid Argument [2]; String expected for the Attribute argument.")
+	assert(typeof(TweenInformation) == "TweenInfo" or TweenInformation == nil, "Invalid Argument [4]; Valid TweenInfo expected but got other type.")
+	--------------------------------------------------------------------------------------------------------------
+
+	local Tween = nil
+	local TweenService = game:GetService("TweenService")
+	local CurrentAttribute = Object:GetAttribute(Attribute)
+	local TypesDirectMapping = {
+		["boolean"] = "BoolValue",
+		["number"] = "NumberValue",
+		["Color3"] = "Color3Value",
+		["CFrame"] = "CFrameValue",
+		["Vector3"] = "Vector3Value",
+	}
+	local TypesInDirectMapping = {
+		["Vector2"] = {"UISizeConstraint", "MaxSize"},
+		["UDim"] = {"UICorner", "CornerRadius"},
+		["UDim2"] = {"Frame", "Position"},
+		["Rect"] = {"ImageLabel", "SliceCenter"},
+	}
+
+	if CurrentAttribute then
+		local ValueType = typeof(CurrentAttribute)
+		if ValueType ~= typeof(GoalValue) then
+			error("GoalValue must match the data type of the attribute value.")
+		end
+		if TypesDirectMapping[ValueType] then
+			local ProxyObject = Instance.new(TypesDirectMapping[ValueType])
+			Tween = TweenService:Create(ProxyObject, (TweenInformation or TweenInfo.new()), {Value = GoalValue})
+
+			local POConnection = ProxyObject.Changed:Connect(function()
+				Object:SetAttribute(Attribute, ProxyObject.Value)
+			end)
+			Tween.Completed:Connect(function()
+				if POConnection.Connected then
+					POConnection:Disconnect()
+					ProxyObject:Destroy()
+					POConnection = nil
+				end
+			end)
+		elseif TypesInDirectMapping[ValueType] then
+			local Property = TypesInDirectMapping[ValueType][2]
+			local ProxyObject = Instance.new(TypesInDirectMapping[ValueType][1])
+			Tween = TweenService:Create(ProxyObject, (TweenInformation or TweenInfo.new()), {[Property] = GoalValue})
+
+			local POConnection = ProxyObject:GetPropertyChangedSignal(Property):Connect(function()
+				Object:SetAttribute(Attribute, ProxyObject[Property])
+			end)
+			Tween.Completed:Connect(function()
+				if POConnection.Connected then
+					POConnection:Disconnect()
+					ProxyObject:Destroy()
+					POConnection = nil
+				end
+			end)
+		end
+	else
+		error("[AttributeTween] Could not find the attribute named: " .. Attribute)
+	end
+	return Tween
 end
 
 --[[ Finds the nearest ancestor of the given object that has the specified attribute.

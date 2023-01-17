@@ -90,6 +90,7 @@ export type InstanceXPascal = {
 	GetDescendantsWithAttributes: (Ancestor: Instance, Attributes: {string}, ShouldMatchAll: boolean?) -> {Instance},
 	WaitForChildWhithAttribute: (Ancestor: Instance, Attribute: string, TimeOut: number?) -> Instance?,
 	ClearAllAttributes: (Object: Instance, Excluded: {string}?) -> (),
+	AttributeTween: (Object: Instance, Attribute: string, GoalValue: any, TweenInformation: TweenInfo?) -> Tween,
 
 	--| Tags:
 	FindFirstChildTagged: (Ancestor: Instance, Tag: (string | {string})) -> Instance?,
