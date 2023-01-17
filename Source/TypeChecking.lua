@@ -149,6 +149,7 @@ export type InstanceXLowered = {
 	getdescendantswithattributes: (Ancestor: Instance, Attributes: {string}, ShouldMatchAll: boolean?) -> {Instance},
 	waitforchildwhithattribute: (Ancestor: Instance, Attribute: string, TimeOut: number?) -> Instance?,
 	clearallattributes: (Object: Instance, Excluded: {string}?) -> (),
+	attributetween: (Object: Instance, Attribute: string, GoalValue: any, TweenInformation: TweenInfo?) -> Tween,
 
 	--| Tags:
 	findfirstchildtagged: (Ancestor: Instance, Tag: (string | {string})) -> Instance?,
