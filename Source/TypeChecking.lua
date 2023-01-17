@@ -65,6 +65,7 @@ export type InstanceXPascal = {
 	WaitForChildOfClass: (Ancestor: Instance, ClassName: string, TimeOut: number?) -> Instance,
 	WaitForChildren: (Ancestor: Instance, ChildrenNames: {string}, TimeOut: number?, SingleInstanceTimout: number?) -> ({Instance}, boolean),
 	WaitForHierarchy: (Ancestor: Instance, HierarchyTable: ({} | {any}), TimeOut: number?, SingleInstanceTimout: number?) -> ({any}, boolean),
+	WaitForTweens: (...Tween) -> (),
 
 	--| Clone:
 	CloneAndParent: (Object: Instance, Parent: Instance?, Clones: number?) -> (Instance | {Instance}),
@@ -124,6 +125,7 @@ export type InstanceXLowered = {
 	waitforchildofclass: (Ancestor: Instance, ClassName: string, TimeOut: number?) -> Instance,
 	waitforchildren: (Ancestor: Instance, ChildrenNames: {string}, TimeOut: number?, SingleInstanceTimout: number?) -> ({Instance}, boolean),
 	waitforhierarchy: (Ancestor: Instance, HierarchyTable: ({} | {any}), TimeOut: number?, SingleInstanceTimout: number?) -> ({any}, boolean),
+	waitfortweens: (...Tween) -> (),
 
 	--| Clone:
 	cloneandparent: (Object: Instance, Parent: Instance?, Clones: number?) -> (Instance | {Instance}),
