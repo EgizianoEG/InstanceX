@@ -300,11 +300,11 @@ function Attributes.FindFirstDescendantWithAttribute(Ancestor: Instance, Attribu
 	return nil, nil
 end
 
---[[ SetMultipleAttributes - Sets the specified attributes for multiple objects.
+--[[ MultiSetAttributes - Sets the specified attributes for multiple objects.
 --| @param	Objects: An array of objects to set the attributes for.
 --| @param	Attributes: A table of attributes to set, where the keys are the attribute names and the values are the attribute values.
 --| @return	None.]]
-function Attributes.SetMultipleAttributes(Objects: {Instance}, Attributes: {[string]: any})
+function Attributes.MultiSetAttributes(Objects: {Instance}, Attributes: {[string]: any})
 	assert(typeof(Objects) == "table", "Invalid Argument [1]; Array expected for the Objects argument.")
 	assert(typeof(Attributes) == "table", "Invalid Argument [2]; Table expected for the Attributes argument.")
 	----------------------------------------------------------------------------------------------------------
