@@ -108,14 +108,14 @@ end
 -| @param	GoalValue: The value to tween the attribute to or a function that returns a new value based on the current attribute value (as the first parameter of it).
 -| @param	TweenInformation (Optional): The TweenInfo to use to animate the attribute.
 -| @return	Tween - The Tween that can be used to animate the attribute.]]
-function Attributes.AttributeTween(Object: Instance, Attribute: string, GoalValue: (any | (any) -> any), TweenInformation: TweenInfo?)
+function Attributes.AttributeTween(Object: Instance, Attribute: string, GoalValue: ((any) -> any | any), TweenInformation: TweenInfo?)
 	assert(typeof(Object) == "Instance", "Invalid Argument [1]; Instance expected for the object argument.")
 	assert(typeof(Attribute) == "string", "Invalid Argument [2]; String expected for the Attribute argument.")
 	assert(typeof(TweenInformation) == "TweenInfo" or TweenInformation == nil, "Invalid Argument [4]; Valid TweenInfo expected but got other type.")
 	--------------------------------------------------------------------------------------------------------------
 
 	local Tween = nil
-    local TInfo = TweenInformation or TweenInfo.new()
+	local TInfo = TweenInformation or TweenInfo.new()
 	local TweenService = game:GetService("TweenService")
 	local AttributeValue = Object:GetAttribute(Attribute)
 	local TypesDirectMapping = {
@@ -132,11 +132,11 @@ function Attributes.AttributeTween(Object: Instance, Attribute: string, GoalValu
 		["Rect"] = {"ImageLabel", "SliceCenter"},
 	}
 
-    local Statements = {
-        ["Direct"] = function(ValueType: string)
-            local POConnection
-            local ProxyObject = Instance.new(TypesDirectMapping[ValueType]) :: ValueBase
-            ProxyObject.Value = AttributeValue
+	local Statements = {
+		["Direct"] = function(ValueType: string)
+			local POConnection
+			local ProxyObject = Instance.new(TypesDirectMapping[ValueType])
+			ProxyObject.Value = AttributeValue
 			Tween = TweenService:Create(ProxyObject, TInfo, {Value = GoalValue})
 
 			POConnection = ProxyObject.Changed:Connect(function()
@@ -149,13 +149,13 @@ function Attributes.AttributeTween(Object: Instance, Attribute: string, GoalValu
 					POConnection = nil
 				end
 			end)
-        end;
+		end;
 
-        ["InDirect"] = function(ValueType: string)
-            local POConnection
-            local ProxyObject = Instance.new(TypesInDirectMapping[ValueType][1])
+		["InDirect"] = function(ValueType: string)
+			local POConnection
+			local ProxyObject = Instance.new(TypesInDirectMapping[ValueType][1])
 			local Property = TypesInDirectMapping[ValueType][2]
-            ProxyObject[Property] = AttributeValue
+			ProxyObject[Property] = AttributeValue
 			Tween = TweenService:Create(ProxyObject, TInfo, {[Property] = GoalValue})
 
 			POConnection = ProxyObject:GetPropertyChangedSignal(Property):Connect(function()
@@ -168,22 +168,22 @@ function Attributes.AttributeTween(Object: Instance, Attribute: string, GoalValu
 					POConnection = nil
 				end
 			end)
-        end
-    }
+		end
+	}
 
 	if AttributeValue ~= nil then
 		local ValueType = typeof(AttributeValue)
-        GoalValue = (type(GoalValue) == "function" and GoalValue(AttributeValue)) or GoalValue
-        assert(typeof(GoalValue) == ValueType, "[AttributeTween] Attribute value and GoalValue types must match each other.")
-        if TypesDirectMapping[ValueType] then
-            Statements.Direct(ValueType)
+		GoalValue = (type(GoalValue) == "function" and GoalValue(AttributeValue)) or GoalValue
+		assert(typeof(GoalValue) == ValueType, "[AttributeTween] Attribute value and GoalValue types must match each other.")
+		if TypesDirectMapping[ValueType] then
+			Statements.Direct(ValueType)
 		elseif TypesInDirectMapping[ValueType] then
 			Statements.InDirect(ValueType)
 		end
 	else
 		error(string.format("Attributes - [AttributeTween] Could not find the attribute named \"%s\".", Attribute))
 	end
-    return Tween
+	return Tween
 end
 
 --[[ Finds the nearest ancestor of the given object that has the specified attribute.

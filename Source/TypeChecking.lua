@@ -41,6 +41,12 @@ type ClearAllFilter = {
 	IsA: string?;
 }
 
+type AttributeValue = (nil | boolean | number | string | Vector2 | Vector3 |
+	UDim | UDim2 | Rect | NumberSequence | Color3 | BrickColor | NumberRange |
+	ColorSequence | CFrame | Font)
+
+type TweenableValue = (boolean | number |Vector2 | Vector3 | UDim | UDim2 | Rect | Color3 | CFrame)
+
 export type InstanceXPascal = {
 	--| MainModule:
 	GetInstanceFromPath: (Ancestor: (Instance | string)?, Path: string, PathSeparator: string?, FunctionTimeout: number?, WaitForCreation: boolean?, InstanceWaitTimeout: number?) -> (Instance?, string?),
@@ -91,7 +97,7 @@ export type InstanceXPascal = {
 	GetDescendantsWithAttributes: (Ancestor: Instance, Attributes: {string}, ShouldMatchAll: boolean?) -> {Instance},
 	WaitForChildWhithAttribute: (Ancestor: Instance, Attribute: string, TimeOut: number?) -> Instance?,
 	ClearAllAttributes: (Object: Instance, Excluded: {string}?) -> (),
-	AttributeTween: (Object: Instance, Attribute: string, GoalValue: (any | (any) -> any), TweenInformation: TweenInfo?) -> Tween,
+	AttributeTween: (Object: Instance, Attribute: string, GoalValue: TweenableValue | (any) -> TweenableValue, TweenInformation: TweenInfo?) -> Tween,
 
 	--| Tags:
 	FindFirstChildTagged: (Ancestor: Instance, Tag: (string | {string})) -> Instance?,
@@ -151,7 +157,7 @@ export type InstanceXLowered = {
 	getdescendantswithattributes: (Ancestor: Instance, Attributes: {string}, ShouldMatchAll: boolean?) -> {Instance},
 	waitforchildwhithattribute: (Ancestor: Instance, Attribute: string, TimeOut: number?) -> Instance?,
 	clearallattributes: (Object: Instance, Excluded: {string}?) -> (),
-	attributetween: (Object: Instance, Attribute: string, GoalValue: (any | (any) -> any), TweenInformation: TweenInfo?) -> Tween,
+	attributetween: (Object: Instance, Attribute: string, GoalValue: TweenableValue | (any) -> TweenableValue, TweenInformation: TweenInfo?) -> Tween,
 
 	--| Tags:
 	findfirstchildtagged: (Ancestor: Instance, Tag: (string | {string})) -> Instance?,
