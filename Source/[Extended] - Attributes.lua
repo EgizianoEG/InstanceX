@@ -451,7 +451,7 @@ function Attributes.ClearAllAttributes(Object: Instance, Excluded: {string}?)
 	assert(typeof(Excluded) == "table" or Excluded == nil, "Invalid Argument [2]; String array expected for the Excepted argument.")
 	----------------------------------------------------------------------------------------------------------
 
-	for Attribute, Value in pairs(Object:GetAttributes()) do
+	for Attribute in pairs(Object:GetAttributes()) do
 		if Excluded then
 			if not table.find(Excluded, Attribute) then
 				Object:SetAttribute(Attribute, nil)

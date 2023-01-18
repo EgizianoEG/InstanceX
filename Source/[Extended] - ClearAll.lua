@@ -98,7 +98,7 @@ end
 -| @return  number - the number of destroyed instances.]]
 function Clear.ClearAllDescendantsExcept(Ancestor: Instance, Excluded: {[string]: any})
 	assert(typeof(Ancestor) == "Instance", "Invalid Argument [1]; Instance expected.")
-	assert(typeof(Excepted) == "table", "Invalid Argument [2]; Table expected.")
+	assert(typeof(Excluded) == "table", "Invalid Argument [2]; Table expected.")
 	----------------------------------------------------------------------------
 
 	local Destroyed = 0
