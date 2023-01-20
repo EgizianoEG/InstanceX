@@ -494,7 +494,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------|
 
---| Experimental - Custom Instance Methods (Won't work propaply because of the Instance assertions that are in most of the functions)
+--| Experimental - Custom Instance Methods (Won't work properly because of the Instance assertions that are in most of the functions)
 --[[
 local WrapperCache = setmetatable({}, {__mode = "k"})
 
